@@ -1,13 +1,14 @@
 <template>
   <div class="playground" >
       <Board @addBall="addBall"/>
+      <Bin :collectedBall="collectedBall"/>
       <transition v-for="(ball, index) in balls" :key="index"
         appear
         v-on:appear="beforeFall"
         v-on:after-appear="Falling"
         v-bind:css="false"
       >
-          <div class="ball" :data-posx="ball.x" :data-posy="ball.y" v-if="!ball.done">
+          <div class="ball" :data-index="index" :data-posx="ball.x" :data-posy="ball.y" v-if="!ball.done">
               <div>+</div>
           </div>
       </transition>
@@ -15,19 +16,21 @@
 </template>
 <script>
 import Board from "./Board.vue";
+import Bin from "./Bin.vue";
 export default {
   name: "Playground",
   data: function() {
     return {
-      balls: []
+      balls: [],
+      collectedBall: 0
     };
   },
   components: {
-    Board
+    Board,
+    Bin
   },
   methods: {
     addBall(x, y) {
-      console.log('addBall', x, y);
       this.balls.push({
           done: false,
           x,
@@ -40,9 +43,17 @@ export default {
         el.style.transition = `transform ${t}s cubic-bezier(0.4, 0, 1, 1)`
         el.firstChild.style.transform = `translate3d(0px, 0px,0)`
         el.firstChild.style.transition = `transform 2s ease-out`
+
+        el.firstChild.addEventListener('transitionend', ()=>{
+            this.balls[el.dataset.index].done = true
+            this.collectedBall += 1
+        }, {
+            passive: true
+        })
+
         setTimeout(() => {
             done()
-        }, 16);
+        }, 16)
     },
     Falling(el){
         el.style.transform = 'translate3d(0, 50px, 0)'
@@ -55,13 +66,12 @@ export default {
 body {
     margin: 0;
 }
-.plaground {
-  margin: 5vh;
-  border: 1px solid #999;
+.playground {
+    position: relative;
 }
 .ball {
   position: fixed;
-  top: 300px;
+  top: 282px;
   left: 0;
 
 }
