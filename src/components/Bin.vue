@@ -1,5 +1,9 @@
 <template>
-  <div :class="['bin', (notExpanding || allExpaned) ? '' : 'expand']"></div>
+  <div :class="['bin', (notExpanding || allExpaned) ? '' : 'expand']">
+    <svg>
+        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cart"></use>
+    </svg>
+  </div>
 </template>
 <script>
 export default {
@@ -49,7 +53,10 @@ export default {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background-color: brown;
+}
+svg {
+    width: 100%;
+    height: 100%;
 }
 .expand {
     animation: expand 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;

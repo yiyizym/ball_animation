@@ -13,6 +13,7 @@ export default {
 </script>
 <style >
 .board {
+    box-sizing: border-box;
     width: 300px;
     height: 300px;
     border: 1px solid #333;
